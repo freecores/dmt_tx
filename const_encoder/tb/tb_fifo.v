@@ -1,4 +1,26 @@
-
+/* *****************************************************************
+ *
+ *  This file is part of Tone Order and Constellation Encoder Core.
+ *  Copyright (C) 2007 Guenter Dannoritzer
+ *
+ *   This source is free software; you can redistribute it
+ *   and/or modify it under the terms of the 
+ *             GNU General Public License
+ *   as published by the Free Software Foundation; 
+ *   either version 3 of the License,
+ *   or (at your option) any later version.
+ *
+ *   This source is distributed in the hope 
+ *   that it will be useful, but WITHOUT ANY WARRANTY;
+ *   without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the
+ *   GNU General Public License along with this program.
+ *   If not, see <http://www.gnu.org/licenses/>.
+ *
+ * *****************************************************************/
 module tb_fifo;
 
 parameter AWIDTH = 2;
@@ -121,6 +143,21 @@ initial begin
   check_result(got_data, 8'h73);
   check_control(5'b0001);
 
+  //
+  // Now test a read/write at the same clock
+  //
+
+  //
+  // First have one entry in the FIFO and do a read/write
+  //
+
+  //
+  // Now have an empty FIFO and do the read/write
+  //
+  
+  //
+  // Finally fill up the FIFO and to the read/write
+  //
 
   $finish();
 
