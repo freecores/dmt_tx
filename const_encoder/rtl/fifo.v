@@ -1,6 +1,20 @@
 /* *****************************************************************
  *
- *  This file is part of Tone Order and Constellation Encoder Core.
+ *  This file is part of the
+ *
+ *   Tone Order and Constellation Encoder Core.
+ *  
+ *
+ * Description:
+ *
+ *  fifo is a synchronouys FIFO without write through. The read
+ *  and write operation happens with the positive edge of the clk
+ *  signal. If the FIFO is empty and performing a read/write operation
+ *  with at the same clock cycle only the write operation will succeed.
+ *  The read operation will not return a valid value.
+ *
+ *  
+ ********************************************************************* 
  *  Copyright (C) 2007 Guenter Dannoritzer
  *
  *   This source is free software; you can redistribute it
@@ -17,7 +31,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the
- *   GNU General Public License along with this program.
+ *   GNU General Public License along with this source.
  *   If not, see <http://www.gnu.org/licenses/>.
  *
  * *****************************************************************/
@@ -106,11 +120,10 @@ always @(posedge clk or posedge reset) begin
   else begin
 
     // TODO: fix this to allow read/write at one clock cycle
-    if(dp_we_i) begin
+    if(dp_we_i & ~ dp_re_i) begin
       fill_ctr <= fill_ctr + 1;
     end
-
-    if(dp_re_i) begin
+    else if(dp_re_i & ~ dp_we_i) begin
       fill_ctr <= fill_ctr - 1;
     end
   end
