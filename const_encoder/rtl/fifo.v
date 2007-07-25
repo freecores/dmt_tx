@@ -119,7 +119,6 @@ always @(posedge clk or posedge reset) begin
   end
   else begin
 
-    // TODO: fix this to allow read/write at one clock cycle
     if(dp_we_i & ~ dp_re_i) begin
       fill_ctr <= fill_ctr + 1;
     end

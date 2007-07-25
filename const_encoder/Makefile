@@ -6,6 +6,13 @@ CFLAGS =-Irtl/
 vpath %.v rtl tb
 vpath %.vh rtl
 
+FIFO			= fifo.v \
+						generic_dpram.v
+CONST_ENC	= $(FIFO) \
+						const_enc.v
+
+
+
 .PHONY: all sim doc clean
 
 all: sim
@@ -18,14 +25,14 @@ const_enc: const_enc.vvp
 	@echo -e "\n--> Simulating $@"
 	$(SIM) $^
 
-const_enc.vvp: const_enc.v tb_const_enc.v
+const_enc.vvp: tb_const_enc.v $(CONST_ENC)
 	$(CC) $(CFLAGS) $^ -s tb_const_encoder -o $@
 
 fifo: fifo.vvp
 	@echo -e "\n--> Simulating $@"
 	$(SIM) $^
 	
-fifo.vvp: fifo.v tb_fifo.v generic_dpram.v
+fifo.vvp: tb_fifo.v $(FIFO)
 	@echo -e "\n--> Compiling $@"
 	$(CC) $(CFLAGS) $^ -s tb_fifo -o $@
 
