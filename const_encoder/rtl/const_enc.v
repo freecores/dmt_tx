@@ -76,17 +76,17 @@ output  [CONSTW-1:0]  y_o;
 //
 // local wire/regs
 //
-wire    [DW-1:0]      fast_data_o;
-wire    [DW-1:0]      inter_data_o;
+wire    [DW-1:0]          fast_data_o;
+wire    [DW-1:0]          inter_data_o;
 
-reg   [SHIFTW-1:0]    fast_shift_reg;
-reg   [SHIFTW-1:0]    inter_shift_reg;
-reg   [MAXBITNUM-1:0] const_input_reg;
+reg   [SHIFTW-1:0]        fast_shift_reg;
+reg   [SHIFTW-1:0]        inter_shift_reg;
+reg   [MAXBITNUM-1:0]     const_input_reg;
 
-reg   [CONFDW-1:0]    BitLoading [0:TABLELEN-1];
-reg   [CONFDW-1:0]    CarrierNumber [0:TABLELEN-1];
-reg   [USEDCREGW-1:0] UsedCarrier;
-reg   [FBITSW-1:0]    FastBits;
+reg   [CONFDW-1:0]        BitLoading [0:REG_MEM_LEN-1];
+reg   [CONFDW-1:0]        CarrierNumber [0:REG_MEM_LEN-1];
+reg   [USED_C_REG_W-1:0]  UsedCarrier;
+reg   [F_BITS_W-1:0]      FastBits;
 
 //
 // intantiate the fast path and interleaved path FIFOs
@@ -129,7 +129,20 @@ always @(posedge clk or posedge reset) begin
 
   end
   else begin
-    UsedCarrier <= 1;
+    if(we_conf_i) begin
+      if(addr_i >= 0 && addr_i < C_NUM_ST_ADR) begin
+        BitLoading[addr_i] <= conf_data_i;
+      end
+      else if(addr_i >= C_NUM_ST_ADR && addr_i < USED_C_ADR) begin
+        CarrierNumber[addr_i - C_NUM_ST_ADR] <= conf_data_i;
+      end
+      else if(addr_i == USED_C_ADR) begin
+        UsedCarrier <= conf_data_i;
+      end
+      else if(addr_i == F_BITS_ADR) begin
+        FastBits <= conf_data_i;
+      end
+    end
   end
     
 end
