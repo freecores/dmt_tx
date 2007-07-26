@@ -68,8 +68,8 @@ input                 we_conf_i;
 input   [CONFDW-1:0]  conf_data_i;
 output                xy_ready_o;
 output  [CNUMW-1:0]   carrier_num_o;
-output  [CONSTW-1:0]  x_o;            reg [CONSTW-1:0] x_o;
-output  [CONSTW-1:0]  y_o;            reg [CONSTW-1:0] y_o;
+output  [CONSTW-1:0]  x_o;            reg signed [CONSTW-1:0] x_o;
+output  [CONSTW-1:0]  y_o;            reg signed [CONSTW-1:0] y_o;
 
 
 
@@ -165,8 +165,8 @@ always @(posedge reset or posedge clk) begin
   else begin
     case (bit_load)
       4'b0010:  begin // #2
-                  x_o <= {cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], 1'b1};
-                  y_o <= {cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], 1'b1};
+                  x_o <= {cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], cin[1], 1'b1};
+                  y_o <= {cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], cin[0], 1'b1};
                 end
       
       4'b0011:  begin // #3

@@ -1,7 +1,7 @@
 CC	= iverilog
 SIM = vvp
 
-CFLAGS =-Irtl/
+CFLAGS =-Wall -Irtl/
 
 vpath %.v rtl tb
 vpath %.vh rtl
@@ -25,7 +25,7 @@ const_enc: const_enc.vvp
 	@echo -e "\n--> Simulating $@"
 	$(SIM) $^
 
-const_enc.vvp: tb_const_enc.v $(CONST_ENC)
+const_enc.vvp: tb_const_enc.v const_map_data.v $(CONST_ENC)
 	$(CC) $(CFLAGS) $^ -s tb_const_encoder -o $@
 
 fifo: fifo.vvp

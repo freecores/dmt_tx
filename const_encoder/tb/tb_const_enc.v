@@ -45,8 +45,8 @@ reg                 we_conf_i;
 reg   [CONFAW-1:0]  addr_i;
 reg   [CONFDW-1:0]  conf_data_i;
 wire  [CNUMW-1:0]   carrier_num_o;
-wire  [CONSTW-1:0]  x_o;
-wire  [CONSTW-1:0]  y_o;
+wire  signed [CONSTW-1:0]  x_o;
+wire  signed [CONSTW-1:0]  y_o;
 
 //
 // instantiate the DUT
@@ -66,6 +66,11 @@ const_encoder dut ( .clk(clk),
                     .carrier_num_o(carrier_num_o),
                     .x_o(x_o),
                     .y_o(y_o));
+
+//
+// instantiate test data modules
+//
+const_map_2bit cm_2bit();
 
 
 initial begin
@@ -131,6 +136,11 @@ initial begin
 
   check_config(USED_C_ADR, 4);
   check_config(F_BITS_ADR, 7);
+
+  //
+  // checking the constellation map
+  //
+  check_const_map(2);
   
   #1000 $finish();
 
@@ -211,6 +221,47 @@ task check_config(input [CONFAW-1:0] addr, input [CONFDW-1:0] exp_data);
       end
 
     end
+  end
+endtask
+
+
+//
+// check constellation map
+//
+// This task feeds in data direct to the constellation encoder module
+// and checks the expected outcome.
+//
+// Given parameter is the bit size of the constellation map.
+//
+task check_const_map(input [3:0] bit);
+  integer len;
+  integer i;
+  begin
+   len = 1 << bit;
+    for(i=0; i<len; i=i+1) begin
+      $display("Testing %d bit constellation with input value %d", bit, i);
+      // feed input data
+      dut.bit_load <= bit;
+      dut.cin <= i;
+
+      @ (posedge clk);
+      @ (negedge clk);
+      // compare output with expected result
+      case (bit)
+        1:  $display("%d bit is not support constellation size", bit);
+        2:  begin
+              if(cm_2bit.re[i] !== x_o) begin
+                $display("Input: %d --> x_o expected: %d got: %d", i, cm_2bit.re[i], x_o);
+              end
+              if(cm_2bit.im[i] !== y_o) begin
+                $display("Input: %d --> y_o expected: %d got: %d", i, cm_2bit.im[i], y_o);
+              end
+            end
+        default: $display("%d is not an implemented bit size", bit);
+      endcase
+        
+    end
+
   end
 endtask
 
