@@ -171,7 +171,7 @@ always @(posedge reset or posedge clk) begin
       
       4'b0011:  begin // #3
                   case (cin[2:0])
-                    3'b000: begin x_o <= 9'b000000001; y_o <= 9'b000000011; end
+                    3'b000: begin x_o <= 9'b000000001; y_o <= 9'b000000001; end
                     3'b001: begin x_o <= 9'b000000001; y_o <= 9'b111111111; end
                     3'b010: begin x_o <= 9'b111111111; y_o <= 9'b000000001; end
                     3'b011: begin x_o <= 9'b111111111; y_o <= 9'b111111111; end
@@ -184,14 +184,14 @@ always @(posedge reset or posedge clk) begin
                 end
       
       4'b0100:  begin // #4
-                  x_o <= {cin[2], cin[2], cin[2], cin[2], cin[2], cin[2], cin[2], cin[0], 1'b1};
-                  y_o <= {cin[3], cin[3], cin[3], cin[3], cin[3], cin[3], cin[3], cin[1], 1'b1};
+                  x_o <= {cin[3], cin[3], cin[3], cin[3], cin[3], cin[3], cin[3], cin[1], 1'b1};
+                  y_o <= {cin[2], cin[2], cin[2], cin[2], cin[2], cin[2], cin[2], cin[0], 1'b1};
                 end
       
       4'b0101:  begin // #5
                   map_msb(cin[4:0], msb_x, msb_y);
-                  x_o <= {msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[0], 1'b1};
-                  y_o <= {msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[0], 1'b1};
+                  x_o <= {msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[1], msb_x[0], cin[1], 1'b1};
+                  y_o <= {msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[1], msb_y[0], cin[0], 1'b1};
                 end
       
       4'b0110:  begin // #6

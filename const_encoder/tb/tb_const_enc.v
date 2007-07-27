@@ -71,6 +71,9 @@ const_encoder dut ( .clk(clk),
 // instantiate test data modules
 //
 const_map_2bit cm_2bit();
+const_map_3bit cm_3bit();
+const_map_4bit cm_4bit();
+const_map_5bit cm_5bit();
 
 
 initial begin
@@ -141,6 +144,9 @@ initial begin
   // checking the constellation map
   //
   check_const_map(2);
+  check_const_map(3);
+  check_const_map(4);
+  check_const_map(5);
   
   #1000 $finish();
 
@@ -245,10 +251,12 @@ task check_const_map(input [3:0] bit);
       dut.cin <= i;
 
       @ (posedge clk);
+      @ (posedge clk);
       @ (negedge clk);
       // compare output with expected result
       case (bit)
         1:  $display("%d bit is not support constellation size", bit);
+
         2:  begin
               if(cm_2bit.re[i] !== x_o) begin
                 $display("Input: %d --> x_o expected: %d got: %d", i, cm_2bit.re[i], x_o);
@@ -257,6 +265,35 @@ task check_const_map(input [3:0] bit);
                 $display("Input: %d --> y_o expected: %d got: %d", i, cm_2bit.im[i], y_o);
               end
             end
+        
+        3:  begin
+              if(cm_3bit.re[i] !== x_o) begin
+                $display("Input: %d --> x_o expected: %d got: %d", i, cm_3bit.re[i], x_o);
+              end
+              if(cm_3bit.im[i] !== y_o) begin
+                $display("Input: %d --> y_o expected: %d got: %d", i, cm_3bit.im[i], y_o);
+              end
+            end
+        
+        4:  begin
+              if(cm_4bit.re[i] !== x_o) begin
+                $display("Input: %d --> x_o expected: %d got: %d", i, cm_4bit.re[i], x_o);
+              end
+              if(cm_4bit.im[i] !== y_o) begin
+                $display("Input: %d --> y_o expected: %d got: %d", i, cm_4bit.im[i], y_o);
+              end
+            end
+        
+        5:  begin
+              if(cm_5bit.re[i] !== x_o) begin
+                $display($time, " Input: %d --> x_o expected: %d got: %d", i, cm_5bit.re[i], x_o);
+              end
+              if(cm_5bit.im[i] !== y_o) begin
+                $display($time, " Input: %d --> y_o expected: %d got: %d", i, cm_5bit.im[i], y_o);
+              end
+            end
+
+
         default: $display("%d is not an implemented bit size", bit);
       endcase
         
